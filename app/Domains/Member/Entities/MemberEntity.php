@@ -14,37 +14,9 @@ class MemberEntity
     public function __construct(
         private string $id,
         private string $name,
-        private EmailVO $email,
+        private string $email,
         private string $passpord,
     ) {
-    }
-
-    public static function register(EmailVO $email, string $name, string $passpord): self
-    {
-        $id = Uuid::uuid4()->toString();
-        $memberEntity = new self(
-            id: $id,
-            email: $email,
-            name: $name,
-            passpord: $passpord
-        );
-
-        // 記錄領域事件（由聚合根負責）
-        $memberEntity->recordThat(new Registered($id, $email, $name));
-
-        return $memberEntity;
-    }
-
-    protected function recordThat($event)
-    {
-        $this->recordedEvents[] = $event;
-    }
-
-    public function releaseEvents()
-    {
-        $events = $this->recordedEvents;
-        $this->recordedEvents = [];
-        return $events;
     }
 
     public function getId(): string
@@ -57,14 +29,14 @@ class MemberEntity
         return $this->name;
     }
 
-    public function getEmail(): EmailVO
-    {
-        return $this->email;
-    }
-
     public function getPassword(): string
     {
         return $this->passpord;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }
 
